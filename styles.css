@@ -147,6 +147,7 @@ h1 {
   font-size: 30px; letter-spacing: 1px; color: var(--teal);
   margin-top: 10px; padding: 4px 10px; pointer-events: none;
 }
+.win-more { font-size: 14px; color: var(--ink); line-height: 1.5; max-width: 300px; margin-top: 8px; }
 
 /* "Play again" — small gamey pill, top-right of the win screen */
 .btn.replay {
