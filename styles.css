@@ -1,0 +1,193 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --cream: #fdf3e6;
+  --ink: #5a4a6a;
+  --purple: #6e54c8;
+  --teal: #1bb5a0;
+  --orange: #ef8a3a;
+  --gold: #e0853a;
+}
+
+html, body {
+  height: 100%;
+  background: #2e2a3d;
+  font-family: "Baloo 2", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+#game {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  height: 100vh;
+  height: 100dvh;
+  margin: 0 auto;
+  background: var(--cream);
+  overflow: hidden;
+}
+
+#scene { display: block; width: 100%; height: 100%; }
+#scene text { font-family: "Baloo 2", sans-serif; font-weight: 700; }
+#tap-target text, #hit-flash { font-family: "Luckiest Guy", "Baloo 2", cursive; }
+
+#tap-target { cursor: pointer; }
+
+#btn-mute {
+  position: absolute; bottom: 12px; left: 12px; z-index: 5;
+  width: 38px; height: 38px; border: none; border-radius: 50%;
+  background: rgba(255, 255, 255, 0.65); cursor: pointer; font-size: 18px;
+  line-height: 38px; padding: 0; text-align: center;
+}
+#btn-mute:active { transform: scale(0.92); }
+
+/* ---- idle bobbing + getting-hit knockback ---- */
+#akhi-bounce, #foe-bounce, #jolli-bounce { transform-box: fill-box; transform-origin: 50% 100%; animation: stance 1.7s ease-in-out infinite; }
+#foe-bounce { animation-duration: 1.9s; animation-delay: -0.6s; }
+#jolli-bounce { animation-duration: 2.6s; }
+@keyframes stance {
+  0%   { transform: translateY(0) scaleY(1) rotate(0deg); }
+  25%  { transform: translateY(-3px) scaleY(1.03) rotate(-2deg); }
+  50%  { transform: translateY(0) scaleY(0.97) rotate(0deg); }
+  75%  { transform: translateY(-3px) scaleY(1.03) rotate(2deg); }
+  100% { transform: translateY(0) scaleY(1) rotate(0deg); }
+}
+
+.recoil-r { animation: knockR .42s ease-out !important; }
+.recoil-l { animation: knockL .42s ease-out !important; }
+@keyframes knockR { 0% { transform: translate(0,0);} 22% { transform: translate(15px,-7px);} 100% { transform: translate(0,0);} }
+@keyframes knockL { 0% { transform: translate(0,0);} 22% { transform: translate(-15px,-7px);} 100% { transform: translate(0,0);} }
+
+/* small reactions for the constant stream of attacks */
+.flinch-r { animation: flinchR .16s ease-out !important; }
+@keyframes flinchR { 0% { transform: translate(0,0);} 45% { transform: translate(6px,-2px);} 100% { transform: translate(0,0);} }
+.flinch-l { animation: flinchL .16s ease-out !important; }
+@keyframes flinchL { 0% { transform: translate(0,0);} 45% { transform: translate(-6px,-2px);} 100% { transform: translate(0,0);} }
+.lunge { animation: lunge .16s ease-out !important; }
+@keyframes lunge { 0% { transform: translate(0,0);} 45% { transform: translate(10px,0);} 100% { transform: translate(0,0);} }
+.lunge-l { animation: lungeL .18s ease-out !important; }
+@keyframes lungeL { 0% { transform: translate(0,0);} 45% { transform: translate(-12px,0);} 100% { transform: translate(0,0);} }
+
+.shake-scene { animation: shakeScene .32s; }
+@keyframes shakeScene { 0%,100% { transform: translate(0,0);} 20% { transform: translate(-5px,3px);} 50% { transform: translate(5px,-3px);} 80% { transform: translate(-3px,2px);} }
+
+.cloud { animation: drift 26s linear infinite; }
+#cloud2 { animation-duration: 34s; animation-delay: -10s; }
+@keyframes drift { 0% { transform: translateX(-30px);} 50% { transform: translateX(30px);} 100% { transform: translateX(-30px);} }
+
+/* ---- overlay screens ---- */
+.screen {
+  position: absolute;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 28px;
+  background: var(--cream);
+}
+.screen.active { display: flex; }
+#screen-battle.active { display: block; }
+
+.title-art { width: 220px; max-width: 70%; margin-bottom: 8px; }
+
+h1 {
+  font-family: "Luckiest Guy", "Baloo 2", cursive;
+  font-size: 34px;
+  color: var(--purple);
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+.subtitle { font-size: 15px; color: var(--ink); margin-bottom: 26px; line-height: 1.5; }
+
+.btn {
+  border: none;
+  border-radius: 999px;
+  padding: 15px 38px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--teal);
+  cursor: pointer;
+  box-shadow: 0 4px 0 #149082;
+  transition: transform .05s, box-shadow .05s;
+  margin-top: 6px;
+}
+.btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #149082; }
+.btn.go { background: var(--orange); box-shadow: 0 4px 0 #c96f22; }
+.btn.go:active { box-shadow: 0 1px 0 #c96f22; }
+.btn.ghost {
+  background: transparent;
+  color: var(--ink);
+  box-shadow: none;
+  font-weight: 500;
+  font-size: 15px;
+  padding: 10px 20px;
+}
+.btn.ghost:active { transform: none; }
+
+/* action buttons live in the top-right corner on win / lose screens */
+.corner-actions { position: absolute; top: 14px; right: 14px; display: flex; gap: 8px; align-items: center; z-index: 2; }
+.corner-actions .btn { margin: 0; padding: 8px 16px; font-size: 14px; }
+
+/* "Yay!" — celebratory text only (not interactive) */
+.text-action {
+  background: none; border: none; box-shadow: none; cursor: default;
+  font-family: "Luckiest Guy", "Baloo 2", cursive;
+  font-size: 30px; letter-spacing: 1px; color: var(--teal);
+  margin-top: 10px; padding: 4px 10px; pointer-events: none;
+}
+
+/* "Play again" — small gamey pill, top-right of the win screen */
+.btn.replay {
+  font-family: "Baloo 2", sans-serif; font-weight: 800; font-size: 13px;
+  color: #fff; background: var(--purple); box-shadow: 0 3px 0 #4f3aa0;
+  padding: 8px 15px;
+}
+.btn.replay:active { box-shadow: 0 1px 0 #4f3aa0; }
+
+.win-art { width: 260px; max-width: 82%; margin-bottom: 10px; }
+.win-msg {
+  font-size: 18px;
+  color: var(--ink);
+  line-height: 1.55;
+  max-width: 320px;
+  margin-bottom: 18px;
+}
+.win-streak {
+  font-size: 15px;
+  color: var(--gold);
+  font-weight: 600;
+  margin-bottom: 22px;
+}
+
+.lose-emoji { font-size: 54px; margin-bottom: 8px; }
+
+/* reveal page */
+.reveal-intro { font-size: 15px; color: var(--ink); margin-bottom: 12px; max-width: 300px; line-height: 1.45; }
+.reveal-lead { font-size: 20px; font-weight: 700; color: var(--purple); margin-bottom: 14px; max-width: 300px; line-height: 1.4; }
+#reveal-card { width: 150px; height: 168px; display: flex; align-items: center; justify-content: center; margin-bottom: 6px; }
+#reveal-card svg { width: 100%; height: 100%; }
+.reveal-name { font-size: 24px; font-weight: 700; color: var(--purple); min-height: 28px; }
+.reveal-rel { font-size: 15px; color: var(--ink); margin-bottom: 22px; min-height: 20px; }
+
+/* countdown page */
+#count-num { font-family: "Luckiest Guy", "Baloo 2", cursive; font-size: 100px; color: var(--purple); }
+.pop { animation: pop .45s ease-out; }
+@keyframes pop { 0% { transform: scale(.4); opacity: 0; } 45% { transform: scale(1.15); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+
+/* ---- confetti / hearts ---- */
+#confetti { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.heart {
+  position: absolute;
+  font-size: 22px;
+  animation: floatup linear forwards;
+}
+@keyframes floatup {
+  0%   { transform: translateY(0) scale(.6) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(-340px) scale(1.1) rotate(40deg); opacity: 0; }
+}
