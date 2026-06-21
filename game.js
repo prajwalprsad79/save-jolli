@@ -2,7 +2,7 @@
 
 const SVGNS = "http://www.w3.org/2000/svg";
 const $ = (id) => document.getElementById(id);
-const screens = ["screen-title", "screen-reveal", "screen-countdown", "screen-battle", "screen-win", "screen-lose"];
+const screens = ["screen-title", "screen-intro", "screen-reveal", "screen-countdown", "screen-battle", "screen-win", "screen-lose"];
 function show(id) {
   screens.forEach((s) => $(s).classList.toggle("active", s === id));
 }
@@ -426,8 +426,11 @@ function rainHearts() {
 }
 
 /* ---- reveal page: "Today you are saving Jolli from..." ---- */
-function showReveal() {
+function showIntro() {
   Sound.start();
+  show("screen-intro");
+}
+function showReveal() {
   pickEnemy();
   $("reveal-card").innerHTML = '<svg viewBox="0 0 120 150" xmlns="http://www.w3.org/2000/svg"><text x="60" y="98" fill="#c9b79a" font-size="84" font-weight="700" text-anchor="middle">?</text></svg>';
   $("reveal-name").innerHTML = "&nbsp;";
@@ -461,7 +464,8 @@ function startCountdown() {
 }
 
 /* ---- wire up buttons / input ---- */
-$("btn-play").addEventListener("click", showReveal);
+$("btn-play").addEventListener("click", showIntro);
+$("btn-savehim").addEventListener("click", showReveal);
 $("btn-reveal").addEventListener("click", revealPerson);
 $("btn-fight").addEventListener("click", startCountdown);
 $("btn-retry").addEventListener("click", showReveal);
@@ -480,6 +484,10 @@ btnMute.addEventListener("click", () => {
 const tapTarget = $("tap-target");
 tapTarget.addEventListener("pointerdown", (e) => { e.preventDefault(); tap(); });
 document.addEventListener("keydown", (e) => { if (e.code === "Space") { e.preventDefault(); tap(); } });
+/* block any touch-drag from nudging/zooming the page */
+document.addEventListener("touchmove", (e) => e.preventDefault(), { passive: false });
+document.addEventListener("gesturestart", (e) => e.preventDefault());
+document.addEventListener("dblclick", (e) => e.preventDefault());
 
 /* draw Jolli (husband) into his three spots */
 $("jolli-title").innerHTML = jolli(100, 52, 14, true);

@@ -10,7 +10,11 @@
 }
 
 html, body {
+  position: fixed;
+  inset: 0;
+  width: 100%;
   height: 100%;
+  overflow: hidden;
   background: #2e2a3d;
   font-family: "Baloo 2", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   -webkit-user-select: none;
@@ -18,7 +22,7 @@ html, body {
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
   overscroll-behavior: none;
-  touch-action: manipulation; /* stop double-tap zoom while tapping fast */
+  touch-action: none; /* fully lock: no scroll, no zoom, no movement */
 }
 
 #game {
@@ -170,7 +174,7 @@ h1 {
 .lose-emoji { font-size: 54px; margin-bottom: 8px; }
 
 /* reveal page */
-.reveal-intro { font-size: 15px; color: var(--ink); margin-bottom: 12px; max-width: 300px; line-height: 1.45; }
+.intro-text { font-size: 17px; color: var(--ink); margin-bottom: 26px; max-width: 320px; line-height: 1.55; }
 .reveal-lead { font-size: 20px; font-weight: 700; color: var(--purple); margin-bottom: 14px; max-width: 300px; line-height: 1.4; }
 #reveal-card { width: 150px; height: 168px; display: flex; align-items: center; justify-content: center; margin-bottom: 6px; }
 #reveal-card svg { width: 100%; height: 100%; }
