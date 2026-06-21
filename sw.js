@@ -1,4 +1,4 @@
-const CACHE = "save-jolli-v24";
+const CACHE = "save-jolli-v25";
 const FILES = [
   "index.html",
   "styles.css",
