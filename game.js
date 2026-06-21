@@ -216,9 +216,9 @@ let ENEMY_FILL = 0;       // seconds for the enemy to charge a power
 let ENEMY_POWER_DMG = 0;  // enemy power damage — a heavy chunk of Akhi's life
 let ENEMY_TAP_DMG = 0;    // small jab damage to Akhi (constant chip)
 function setEnemyStats() {
-  // hard from the very first save, and keeps ramping ~4% per save (capped 1.5x).
+  // gentle for the first few games, then ramps up to a challenging level and caps there.
   // split across HP + damage (sqrt) so it stays beatable for a fast tapper.
-  const diff = Math.min(1.5, 1 + savedDays * 0.04);
+  const diff = Math.min(1.1, 0.62 + savedDays * 0.07);
   const s = Math.sqrt(diff);
   enemyMaxHP = (270 + enemy.level * 35) * s;
   ENEMY_FILL = 3.2;
