@@ -305,7 +305,7 @@ function smallAttack() {
     spark(232, 330, "#15d6bb", false);
     anim("foe-bounce", "flinch-r", 160);
     foeHp -= TAP_DMG; paint();
-    if (foeHp <= 0) winFight();
+    if (foeHp <= 0) victory();
   });
 }
 
@@ -321,7 +321,7 @@ function powerAttack() {
     setTimeout(() => $("hit-flash").setAttribute("opacity", "0"), 320);
     floatText(246, 304, "-" + POWER_DMG, "#d8741a");
     foeHp -= POWER_DMG; paint();
-    if (foeHp <= 0) winFight();
+    if (foeHp <= 0) victory();
   });
 }
 
@@ -359,6 +359,8 @@ function startBattle() {
   $("foe-rel").textContent = enemy.relation;
   $("foe").innerHTML = chibi(246, 330, enemy);
   $("bg").innerHTML = themeBG(enemy.relation);
+  $("akhi-bounce").classList.remove("dance");
+  $("foe-bounce").classList.remove("defeated");
   $("hit-flash").setAttribute("opacity", "0");
   paint();
   show("screen-battle");
@@ -390,13 +392,31 @@ function tap() {
   paint();
 }
 
-function winFight() {
+function victory() {
   if (!fighting) return;
   fighting = false;
-  foeHp = 0; paint();
+  foeHp = 0; enemyCharge = 0; paint();
+  $("hit-flash").setAttribute("opacity", "0");
+  // enemy topples over, Akhi breaks into a dance
+  $("foe-bounce").classList.add("defeated");
+  $("akhi-bounce").classList.remove("lunge", "recoil-l", "flinch-l");
+  $("akhi-bounce").classList.add("dance");
+  // victory banner + a little confetti
+  const vt = document.createElementNS(SVGNS, "text");
+  vt.setAttribute("x", "170"); vt.setAttribute("y", "252"); vt.setAttribute("text-anchor", "middle");
+  vt.setAttribute("fill", "#1bb5a0"); vt.setAttribute("font-size", "34"); vt.setAttribute("font-weight", "700");
+  vt.setAttribute("font-family", "'Luckiest Guy','Baloo 2',cursive");
+  vt.textContent = "YOU WIN!";
+  $("fx").appendChild(vt);
+  const cele = ["❤️", "✨", "🎉", "⭐", "💛"];
+  for (let i = 0; i < 8; i++) setTimeout(() => floatText(60 + Math.random() * 70, 360, cele[i % cele.length], "#e0853a"), i * 280);
+  Sound.win();
+  setTimeout(finishWin, 3200); // dance for ~3s, then the win screen
+}
+
+function finishWin() {
   savedDays += 1; // every save counts now
   localStorage.setItem("sj_saved", String(savedDays));
-  Sound.win();
   $("win-msg").textContent = WIN_MESSAGES[Math.floor(Math.random() * WIN_MESSAGES.length)];
   $("win-streak").textContent = `Saved Jolli: ${savedDays} ${savedDays === 1 ? "time" : "times"}`;
   show("screen-win");
