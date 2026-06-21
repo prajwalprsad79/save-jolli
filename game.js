@@ -31,10 +31,10 @@ const DAY_MS = 86400000;
 function todayKey() { const d = new Date(); return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`; }
 function midnight(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime(); }
 
-if (!ls("sj_start", null)) localStorage.setItem("sj_start", String(midnight(new Date())));
-const startMs = Number(ls("sj_start", midnight(new Date())));
+if (!ls("sj_start_v2", null)) localStorage.setItem("sj_start_v2", String(midnight(new Date())));
+const startMs = Number(ls("sj_start_v2", midnight(new Date())));
 const dayIndex = Math.max(0, Math.round((midnight(new Date()) - startMs) / DAY_MS));
-let savedDays = Number(ls("sj_saved", "0"));
+let savedDays = Number(ls("sj_saves", "0"));
 
 /* ---- pick today's enemy ---- */
 let enemy = null;
@@ -416,7 +416,7 @@ function victory() {
 
 function finishWin() {
   savedDays += 1; // every save counts now
-  localStorage.setItem("sj_saved", String(savedDays));
+  localStorage.setItem("sj_saves", String(savedDays));
   $("win-msg").textContent = WIN_MESSAGES[Math.floor(Math.random() * WIN_MESSAGES.length)];
   $("win-streak").textContent = `Saved Jolli: ${savedDays} ${savedDays === 1 ? "time" : "times"}`;
   show("screen-win");
